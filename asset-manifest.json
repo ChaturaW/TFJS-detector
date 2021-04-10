@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/TFJS-detector/static/css/main.8c8b27cf.chunk.css",
+    "main.js": "/TFJS-detector/static/js/main.a854a592.chunk.js",
+    "main.js.map": "/TFJS-detector/static/js/main.a854a592.chunk.js.map",
+    "runtime-main.js": "/TFJS-detector/static/js/runtime-main.22235b17.js",
+    "runtime-main.js.map": "/TFJS-detector/static/js/runtime-main.22235b17.js.map",
+    "static/js/2.7b9552f6.chunk.js": "/TFJS-detector/static/js/2.7b9552f6.chunk.js",
+    "static/js/2.7b9552f6.chunk.js.map": "/TFJS-detector/static/js/2.7b9552f6.chunk.js.map",
+    "static/js/3.ba0c8528.chunk.js": "/TFJS-detector/static/js/3.ba0c8528.chunk.js",
+    "static/js/3.ba0c8528.chunk.js.map": "/TFJS-detector/static/js/3.ba0c8528.chunk.js.map",
+    "index.html": "/TFJS-detector/index.html",
+    "static/css/main.8c8b27cf.chunk.css.map": "/TFJS-detector/static/css/main.8c8b27cf.chunk.css.map",
+    "static/js/2.7b9552f6.chunk.js.LICENSE.txt": "/TFJS-detector/static/js/2.7b9552f6.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/TFJS-detector/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.22235b17.js",
+    "static/js/2.7b9552f6.chunk.js",
+    "static/css/main.8c8b27cf.chunk.css",
+    "static/js/main.a854a592.chunk.js"
+  ]
+}
