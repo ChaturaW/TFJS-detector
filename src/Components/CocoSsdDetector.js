@@ -24,7 +24,7 @@ function CocoSsdDetector() {
     const videoConstraints = {
         width: 640,
         height: 480,
-        facingMode: "user"
+        facingMode: "environment"
     }
 
     const startCam = () => {
