@@ -2,57 +2,61 @@ import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import * as tf from '@tensorflow/tfjs';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVideo, faVideoSlash, faBrain } from '@fortawesome/free-solid-svg-icons';
 
 function CocoSsdDetector() {
 
     const [isShowVideo, setIsShowVideo] = useState(true);
-    const webcamElement = useRef(null);
+    const [videoIcon, setVideoIcon] = useState(faVideoSlash);
+    const webcamRef = useRef(null);
     const canvasRef = useRef(null);
 
     let refreshIntervalId = undefined;
 
     const startDetection = () => {
-        cocoSsd.load().then(model => {
-            const mdl = model;
+        //console.log(isShowVideo);
+        if (isShowVideo) {
+            cocoSsd.load().then(model => {
+                const mdl = model;
 
-            refreshIntervalId = setInterval(() => {
-                detect(mdl);
-            }, 10);
-        });
+                refreshIntervalId = setInterval(() => {
+                    detect(mdl);
+                }, 10);
+            });
+        }
     }
 
     const videoConstraints = {
-        width: 640,
-        height: 480,
         facingMode: "environment"
     }
 
-    const startCam = () => {
-        setIsShowVideo(true);
-    }
-
-    const stopCam = () => {
-        clearInterval(refreshIntervalId);
-
-        let stream = webcamElement.current.stream;
-        const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
-        setIsShowVideo(false);
+    const toggleCam = () => {
+        if (isShowVideo) {
+            clearInterval(refreshIntervalId);
+            const tracks = webcamRef.current.stream.getTracks();
+            tracks.forEach(track => track.stop());
+            setIsShowVideo(false);
+            setVideoIcon(faVideo);
+        } else {
+            setIsShowVideo(true);
+            setVideoIcon(faVideoSlash);
+        }
     }
 
     const detect = async (model) => {
-        if (webcamElement.current) {
-            const video = webcamElement.current.video;
+        if (webcamRef.current) {
+            const video = webcamRef.current.video;
 
             canvasRef.current.width = video.videoWidth;
             canvasRef.current.height = video.videoHeight;
 
             console.log("detecting..")
-            const obj = await model.detect(video);
-            console.log(obj);
+            const detections = await model.detect(video);
+            console.log(detections);
 
             const canv = canvasRef.current.getContext("2d");
-            drawBoundingBox(obj, canv);
+            drawBoundingBox(detections, canv);
         }
     };
 
@@ -61,57 +65,28 @@ function CocoSsdDetector() {
             const [x, y, width, height] = prediction["bbox"];
             const text = prediction["class"];
 
-            console.log(x, y, width, height);
-            console.log(text);
-
-            const color = "green";
+            const color = "red";
             canv.strokeStyle = color;
-            canv.font = "18px Arial";
+            canv.font = "24px Arial";
             canv.fillStyle = color;
 
             canv.beginPath();
-            canv.fillText(text, x, y);
             canv.rect(x, y, width, height);
+            canv.fillStyle = "white";
+            canv.fillText(text, x, y - 10);
             canv.stroke();
         })
     }
 
     return (
         <div>
-            <button onClick={startCam}>Start Video</button>
-            <button onClick={startDetection}>Detect</button>
-            <button onClick={stopCam}>Stop Video</button>
-
-            <div className="camView">
+            <button onClick={toggleCam}><FontAwesomeIcon icon={videoIcon} size="3x" /></button>
+            <button onClick={startDetection}><FontAwesomeIcon icon={faBrain} size="3x" /></button>
+            <div>
                 {isShowVideo &&
-                    <div>
-                        <Webcam audio={false} ref={webcamElement} videoConstraints={videoConstraints}
-                            style={{
-                                position: "absolute",
-                                marginLeft: "auto",
-                                marginRight: "auto",
-                                left: 0,
-                                right: 0,
-                                textAlign: "center",
-                                zindex: 9,
-                                width: 640,
-                                height: 480,
-                            }}
-                        />
-                        <canvas
-                            ref={canvasRef}
-                            style={{
-                                position: "absolute",
-                                marginLeft: "auto",
-                                marginRight: "auto",
-                                left: 0,
-                                right: 0,
-                                textAlign: "center",
-                                zindex: 8,
-                                width: 640,
-                                height: 480
-                            }}
-                        />
+                    <div className="camView">
+                        <div><Webcam audio={false} ref={webcamRef} videoConstraints={videoConstraints} className="webcam" /></div>
+                        <div><canvas ref={canvasRef} className="canvas" /></div>
                     </div>
                 }
             </div>
