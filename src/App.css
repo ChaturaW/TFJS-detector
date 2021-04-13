@@ -39,6 +39,18 @@
   z-index: 8;  
 }
 
+.webcamButton{
+  margin-top: 10px;
+  color: "#464866";
+  size: "3x";
+}
+
+.detectButton {
+  margin-top: 10px;
+  color: "#2E9CCA";
+  size: "3x";
+}
+
 .canvas {
     position: absolute;
     width: 100%;

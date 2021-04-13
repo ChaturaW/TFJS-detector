@@ -9,14 +9,15 @@ function CocoSsdDetector() {
 
     const [isShowVideo, setIsShowVideo] = useState(true);
     const [videoIcon, setVideoIcon] = useState(faVideoSlash);
+    const [message, setMessage] = useState("");
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
 
     let refreshIntervalId = undefined;
 
     const startDetection = () => {
-        //console.log(isShowVideo);
         if (isShowVideo) {
+            setMessage("Loading model. Please wait..")
             cocoSsd.load().then(model => {
                 const mdl = model;
 
@@ -39,13 +40,15 @@ function CocoSsdDetector() {
             setIsShowVideo(false);
             setVideoIcon(faVideo);
         } else {
+            setMessage("Turning on webcam..")
             setIsShowVideo(true);
             setVideoIcon(faVideoSlash);
         }
     }
 
     const detect = async (model) => {
-        if (webcamRef.current) {
+        if ((webcamRef.current)
+            && (webcamRef.current.video.readyState === 4)) {
             const video = webcamRef.current.video;
 
             canvasRef.current.width = video.videoWidth;
@@ -75,14 +78,17 @@ function CocoSsdDetector() {
             canv.fillStyle = "white";
             canv.fillText(text, x, y - 10);
             canv.stroke();
+
+            setMessage("");
         })
     }
 
     return (
         <div>
-            <button onClick={toggleCam}><FontAwesomeIcon icon={videoIcon} size="3x" /></button>
-            <button onClick={startDetection}><FontAwesomeIcon icon={faBrain} size="3x" /></button>
-            <div>
+            <button onClick={toggleCam} className="webcamButton"><FontAwesomeIcon icon={videoIcon} size="3x" color="#464866" /></button>
+            <button onClick={startDetection} className="detectButton"><FontAwesomeIcon icon={faBrain} size="3x" color="#2E9CCA" /></button>
+            <p>{message}</p>
+            <div className="bottomView">
                 {isShowVideo &&
                     <div className="camView">
                         <div><Webcam audio={false} ref={webcamRef} videoConstraints={videoConstraints} className="webcam" /></div>
